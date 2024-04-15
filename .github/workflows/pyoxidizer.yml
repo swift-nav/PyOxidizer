@@ -3,12 +3,6 @@
 # to impact the testing.
 
 on:
-  push:
-    branches-ignore:
-      - 'ci-test'
-    tags-ignore:
-      - '**'
-  pull_request:
   workflow_dispatch:
 jobs:
   pyoxidizer-exes:
