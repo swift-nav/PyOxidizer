@@ -36,7 +36,7 @@ jobs:
             cross: true
           - os: 'ubuntu-22.04'
             triple: 'x86_64-unknown-linux-musl'
-          - os: 'macos-12'
+          - os: 'macos-14'
             triple: 'aarch64-apple-darwin'
           - os: 'macos-12'
             triple: 'x86_64-apple-darwin'
@@ -88,7 +88,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.target.triple }}" = "aarch64-apple-darwin" ]; then
-            export MACOSX_DEPLOYMENT_TARGET=11.0
+            export MACOSX_DEPLOYMENT_TARGET=14.0
           elif [ "${{ matrix.target.triple }}" = "x86_64-apple-darwin" ]; then
             export MACOSX_DEPLOYMENT_TARGET=10.9
           fi
@@ -136,7 +136,7 @@ jobs:
   macos-universal:
     needs:
       - build
-    runs-on: 'macos-12'
+    runs-on: 'macos-14'
     steps:
       - uses: actions/checkout@v3
         with:

@@ -5,7 +5,7 @@ exe_suffix := if os() == "windows" { ".exe" } else { "" }
 
 macosx_deployment_target := if os() == "macos" {
   if arch() == "arm" {
-    "11.0"
+    "14.0"
   } else {
     "10.9"
   }
@@ -272,7 +272,7 @@ pyoxy-release-prepare commit tag:
   rm -rf dist/pyoxy*
   just assemble-exe-artifacts pyoxy {{commit}} dist/pyoxy-artifacts
 
-  for py in 3.8 3.9 3.10; do
+  for py in 3.10 3.11 3.12; do
     for triple in aarch64-apple-darwin x86_64-apple-darwin x86_64-unknown-linux-gnu macos-universal; do
       release_name=pyoxy-{{tag}}-${triple}-cpython${py}
       source=dist/pyoxy-artifacts/exe-pyoxy-${triple}-${py}
