@@ -5,7 +5,7 @@ exe_suffix := if os() == "windows" { ".exe" } else { "" }
 
 macosx_deployment_target := if os() == "macos" {
   if arch() == "arm" {
-    "11.0"
+    "14.0"
   } else {
     "10.9"
   }
@@ -272,7 +272,7 @@ pyoxy-release-prepare commit tag:
   rm -rf dist/pyoxy*
   just assemble-exe-artifacts pyoxy {{commit}} dist/pyoxy-artifacts
 
-  for py in 3.8 3.9 3.10; do
+  for py in 3.10 3.11 3.12; do
     for triple in aarch64-apple-darwin x86_64-apple-darwin x86_64-unknown-linux-gnu macos-universal; do
       release_name=pyoxy-{{tag}}-${triple}-cpython${py}
       source=dist/pyoxy-artifacts/exe-pyoxy-${triple}-${py}
@@ -468,7 +468,21 @@ pyoxidizer-release-upload commit tag:
 pyoxidizer-release:
   just _release pyoxidizer 'PyOxidizer'
 
+pyoxidizer-update-python-distributions: _python_scripts_venv
+  scripts/venv/bin/python3 \
+    scripts/fetch-python-distributions.py \
+    --api-token $GH_API_TOKEN > pyoxidizer/src/default_python_distributions.rs
+  rustfmt pyoxidizer/src/default_python_distributions.rs
+
 # Perform Rust crate releases.
 release-rust:
   cargo release release --exclude pyoxidizer --execute
   cargo release release -p pyoxidizer --execute
+
+# Create virtual environment and install dependencies for Python scripts in it.
+_python_scripts_venv:
+  #!/usr/bin/env bash
+  if [ ! -d scripts/venv ]; then
+    python3 -m venv scripts/venv
+    scripts/venv/bin/pip install -r scripts/requirements.txt
+  fi
